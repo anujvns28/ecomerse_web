@@ -227,7 +227,7 @@ exports.chengePassword = async (req, res) => {
             {new:true}
            )
         }
-
+        console.log("printingg")
         return res.status(200).json({
             success: true,
             messege: "password chenged success"
