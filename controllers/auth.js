@@ -3,6 +3,7 @@ const User = require("../models/user");
 const Otp = require("../models/otp")
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const sendMail = require("../utilit/emalSender");
 
 exports.sendOtp = async (req, res) => {
     try {
@@ -43,7 +44,9 @@ exports.sendOtp = async (req, res) => {
 
             await Otp.create(otpPayload);
            
-
+            //sending mail
+            sendMail(email,"Otp varifaction from eserver",otp)
+            
             return res.status(200).json({
                 success: true,
                 message: "otp send succefully",
