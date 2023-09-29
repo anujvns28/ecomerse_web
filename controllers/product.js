@@ -94,7 +94,7 @@ exports.editProduct = async(req,res) =>{
 
 // deleting product
 exports.deleteProduct = async(req,res) =>{
-    try{j
+    try{
     const {productId,userId} = req.body
 
     await Product.findByIdAndDelete({_id:productId});
