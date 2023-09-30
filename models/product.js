@@ -13,7 +13,7 @@ const productSchema = new mongoose.Schema({
         type:Number,
         required:true
     },
-    productsImage:[{
+    productsImages:[{
         type:String,
         required:true
     }],
@@ -21,9 +21,9 @@ const productSchema = new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:"User"
     },
-    category: {
+    subCategory: {
         type: mongoose.Schema.Types.ObjectId,
-        ref:"Category",
+        ref:"SubCategory",
     },
     
 })
