@@ -1,7 +1,7 @@
 const express = require("express");
 const { createCategoris, updateCategoris, deleteCategory, fetchAllCateories } = require("../controllers/categoris");
 const { createSubCategories, updateSubCategoris, deleteSubCategory, categoryWiseSubCategories } = require("../controllers/subCategories");
-const { createProduct } = require("../controllers/product");
+const { createProduct, deleteProduct, editProduct } = require("../controllers/product");
 const router =  express.Router();
 
 // ********************************************************************************************************
@@ -34,6 +34,9 @@ router.post("/fetchallSubCategory",categoryWiseSubCategories);
 // ********************************************************************************************************
 //creating product
 router.post("/createProduct",createProduct);
-
+//deleating product
+router.post("/deleteProduct",deleteProduct)
+//updating product
+router.post("/editProduct",editProduct)
 
 module.exports = router

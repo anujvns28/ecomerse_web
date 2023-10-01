@@ -10,9 +10,9 @@ exports.createProduct = async (req, res) => {
     try {
         //fetching data productName
         const { productName, desc, price, subCategory, userId } = req.body;
-        
+
         const productImages = req.files.images;
-        
+
         //validation
         if (!productName || !desc || !price || !subCategory || !userId) {
             return res.status(500).json({
@@ -21,7 +21,7 @@ exports.createProduct = async (req, res) => {
             })
         }
         //check category is vallid or not
-        const subcategorDetail = await SubCategory.findOne({ _id:subCategory });
+        const subcategorDetail = await SubCategory.findOne({ _id: subCategory });
         if (!subcategorDetail) {
             return res.status(500).json({
                 success: false,
@@ -37,51 +37,57 @@ exports.createProduct = async (req, res) => {
             })
         }
 
-    const uploader = async(productImg) => await uploadImageToCloudinary(productImg , process.env.FOLDER_NAME);
-    
+        const uploader = async (productImg) => await uploadImageToCloudinary(productImg, process.env.FOLDER_NAME);
+
         let proImages = []
-        productImages.map(async(productImg) =>{
+        productImages.map(async (productImg) => {
             const img = uploader(productImg)
-           img.then(function(result){
-            proImages.push(img)
-           })
-        })
-
-        console.log(proImages)
-        const newProduct = await Product.create({
-            productName: productName,
-            productDes: desc,
-            price: price,
-            productsImage: productImages,
-            productsImages:proImages
-        })
-
-        // pushing productid in seller user scehma
-        const userDetails = await User.findByIdAndUpdate(
-            userId,
-            {
-                $push: {
-                    products: newProduct._id
+            img.then(async function (result) {
+                proImages.push(result.secure_url)
+                if (productImages.length === proImages.length) {
+                    createProduct()
                 }
-            },
-            { new: true }
-        )
-
-        await SubCategory.findByIdAndUpdate(
-            subCategory,
-            {
-                $push: {
-                    product: newProduct._id
-                }
-            },
-            { new: true }
-        )
-
-        return res.status(200).json({
-            success: true,
-            message: "product created successfully",
-            data: newProduct
+            })
         })
+
+        const createProduct = async () => {
+            const newProduct = await Product.create({
+                productName: productName,
+                productDes: desc,
+                price: price,
+                productsImages: proImages,
+                user: userId,
+                subCategory: subCategory
+            })
+
+            // pushing productid in seller user scehma
+            const userDetails = await User.findByIdAndUpdate(
+                userId,
+                {
+                    $push: {
+                        products: newProduct._id
+                    }
+                },
+                { new: true }
+            )
+
+            await SubCategory.findByIdAndUpdate(
+                subCategory,
+                {
+                    $push: {
+                        product: newProduct._id
+                    }
+                },
+                { new: true }
+            )
+
+            return res.status(200).json({
+                success: true,
+                message: "product created successfully",
+                data: newProduct
+            })
+        }
+
     } catch (err) {
         console.log(err);
         return res.status(500).json({
@@ -96,8 +102,15 @@ exports.createProduct = async (req, res) => {
 exports.editProduct = async (req, res) => {
     try {
         //fetching data
-        const { productId, userId } = req.body;
-        //image updating ???
+        const { productName, desc, price, productId } = req.body;
+        const productImages = req.files.images;
+        //validation
+        if (!productName || !desc || !price || !productId) {
+            return res.status(500).json({
+                success: false,
+                message: "all filds are required"
+            })
+        }
 
         //validation
         const productDetails = await Product.findOne({ _id: productId });
@@ -107,6 +120,40 @@ exports.editProduct = async (req, res) => {
                 message: "this is not vallid product"
             })
         }
+
+        const uploader = async (productImg) => await uploadImageToCloudinary(productImg, process.env.FOLDER_NAME);
+
+        let proImages = []
+        productImages.map(async (productImg) => {
+            const img = uploader(productImg)
+            img.then(async function (result) {
+                proImages.push(result.secure_url)
+                if (productImages.length === proImages.length) {
+                    updateProduct()
+                }
+            })
+        })
+
+
+        const updateProduct = async () => {
+            const updatedProduct = await Product.findByIdAndUpdate(
+                productId,
+                {
+                    productName: productName,
+                    productDes: desc,
+                    price: price,
+                    productsImages: proImages,
+                },
+                {new:true}
+            )
+
+            return res.status(200).json({
+                success: true,
+                message: "product updated successfully",
+                data : updatedProduct
+            })
+        }
+
 
 
     } catch (err) {
@@ -124,17 +171,60 @@ exports.deleteProduct = async (req, res) => {
     try {
         const { productId, userId } = req.body
 
-        await Product.findByIdAndDelete({ _id: productId });
-        await User.findByIdAndUpdate(
-            { _id: userId },
+        if (!productId || !userId) {
+            return res.status(500).json({
+                success: false,
+                message: "all filds are required"
+            })
+        }
+
+        const subCategoryDetail = await Product.findOne({ _id: productId })
+        console.log(subCategoryDetail)
+
+        if (!subCategoryDetail) {
+            return res.status(500).json({
+                success: false,
+                message: "This is not vallid Product"
+            })
+        }
+
+        const userDetail = await User.findOne({ _id: userId })
+        if (!userDetail) {
+            return res.status(500).json({
+                success: false,
+                message: "This is not vallid user"
+            })
+        }
+
+
+
+        await SubCategory.findByIdAndUpdate(
+            subCategoryDetail.subCategory._id,
             {
                 $pull: {
-                    user: productId
+                    product: productId
+                }
+            }
+        )
+
+
+        await User.findByIdAndUpdate(
+            userId,
+            {
+                $pull: {
+                    products: productId
                 }
             },
             { new: true }
         )
-        /// categor me se delete karna hai
+
+        await Product.findByIdAndDelete(productId);
+
+        return res.status(500).json({
+            success: true,
+            message: "product delteed successfully"
+        })
+
 
     } catch (err) {
         console.log(err);
