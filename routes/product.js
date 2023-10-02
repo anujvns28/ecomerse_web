@@ -21,6 +21,7 @@ const {
     userProducts, 
     getSubCategoryWiseProduct
 } = require("../controllers/product");
+const { isAdmin, isSeller, auth } = require("../middleWare/auth");
 
 const router =  express.Router();
 
@@ -28,23 +29,23 @@ const router =  express.Router();
 //                                    Categories
 // ********************************************************************************************************
 //creating categores
-router.post("/createCategory",createCategoris);
+router.post("/createCategory",isAdmin, createCategoris);
 //update categores
-router.post("/updateCategory",updateCategoris);
+router.post("/updateCategory", isAdmin,updateCategoris);
 //delete categores
-router.post("/deleteCategories",deleteCategory);
+router.post("/deleteCategories",isAdmin, deleteCategory);
 //fetchall categories
-router.get("/fetchallCategory",fetchAllCateories);
+router.get("/fetchallCategory", fetchAllCateories);
 
 // ********************************************************************************************************
 //                                    subCategories
 // ********************************************************************************************************
 //creating categores
-router.post("/createSubCategory",createSubCategories);
+router.post("/createSubCategory",isAdmin, createSubCategories);
 //update categores
-router.post("/updateSubCategory",updateSubCategoris);
+router.post("/updateSubCategory",isAdmin, updateSubCategoris);
 //delete categores
-router.post("/deleteSubCategories",deleteSubCategory);
+router.post("/deleteSubCategories",isAdmin, deleteSubCategory);
 //fetchall categories
 router.post("/fetchallSubCategory",categoryWiseSubCategories);
 
@@ -53,15 +54,15 @@ router.post("/fetchallSubCategory",categoryWiseSubCategories);
 //                                    createProduct
 // ********************************************************************************************************
 //creating product
-router.post("/createProduct",createProduct);
+router.post("/createProduct",isSeller, createProduct);
 //deleating product
-router.post("/deleteProduct",deleteProduct)
+router.post("/deleteProduct",isSeller, deleteProduct)
 //updating product
-router.post("/editProduct",editProduct)
+router.post("/editProduct",isSeller, editProduct)
 //fetching allProdcuts
-router.get("/fetchAllProducts",getAllProduct)
+router.get("/fetchAllProducts", getAllProduct)
 //fetching getUserProduct
-router.get("/getuserProducts",userProducts)
+router.get("/getuserProducts",auth, userProducts)
 //fetching getSubCategoryWiseProduct
 router.get("/getSubCategoryWiseProduct",getSubCategoryWiseProduct)
 
