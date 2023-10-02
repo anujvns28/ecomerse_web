@@ -1,7 +1,27 @@
 const express = require("express");
-const { createCategoris, updateCategoris, deleteCategory, fetchAllCateories } = require("../controllers/categoris");
-const { createSubCategories, updateSubCategoris, deleteSubCategory, categoryWiseSubCategories } = require("../controllers/subCategories");
-const { createProduct, deleteProduct, editProduct } = require("../controllers/product");
+const { 
+    createCategoris, 
+    updateCategoris, 
+    deleteCategory, 
+    fetchAllCateories 
+} = require("../controllers/categoris");
+
+const { 
+    createSubCategories, 
+    updateSubCategoris, 
+    deleteSubCategory, 
+    categoryWiseSubCategories 
+} = require("../controllers/subCategories");
+
+const { 
+    createProduct, 
+    deleteProduct, 
+    editProduct, 
+    getAllProduct,  
+    userProducts, 
+    getSubCategoryWiseProduct
+} = require("../controllers/product");
+
 const router =  express.Router();
 
 // ********************************************************************************************************
@@ -38,5 +58,12 @@ router.post("/createProduct",createProduct);
 router.post("/deleteProduct",deleteProduct)
 //updating product
 router.post("/editProduct",editProduct)
+//fetching allProdcuts
+router.get("/fetchAllProducts",getAllProduct)
+//fetching getUserProduct
+router.get("/getuserProducts",userProducts)
+//fetching getSubCategoryWiseProduct
+router.get("/getSubCategoryWiseProduct",getSubCategoryWiseProduct)
+
 
 module.exports = router

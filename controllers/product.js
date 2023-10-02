@@ -234,3 +234,94 @@ exports.deleteProduct = async (req, res) => {
         })
     }
 }
+
+
+
+// getting all products
+exports.getAllProduct = async(req,res) =>{
+    try{
+        const allProducts = await Product.find().populate("user").exec()
+        console.log(allProducts)
+
+        return res.status(200).json({
+            success:true,
+            message:"all product fetched successfully",
+            allProducts
+        })
+    }catch(err){
+        console.log(err);
+        return res.status(500).json({
+            success: false,
+            message: "error occerd in fetching all  product"
+        })
+    }
+}
+
+// get user product
+exports.userProducts = async(req,res) =>{
+    try{
+       //fetching data
+        const {userId} = req.body;
+        
+        //vallidation
+        if(!userId){
+            return res.status(500).json({
+                success:false,
+                message:"all fild are required"
+            })
+        }
+
+        const userDetails = await User.findById(userId).populate("products").exec();
+
+        return res.status(200).json({
+            success:true,
+            message:"products fetched successfully",
+            products:userDetails
+        })
+    }catch(err){
+        console.log(err);
+        return res.status(500).json({
+            success: false,
+            message: "error occerd in fetching all  product"
+        })
+    }
+}
+
+// get SubCategorwiseproduct
+exports.getSubCategoryWiseProduct = async(req,res) =>{
+    try{
+        //fetchingdata
+        const {subCategoryId}= req.body;
+
+        //vallidation
+        if(!subCategoryId){
+            return res.status(500).json({
+                success: false,
+                message: "Sub Category is required"
+            }) 
+        }
+        
+        const subCategoryProducts = await SubCategory.findById(subCategoryId).populate("product").exec();
+
+        if(!subCategoryProducts){
+            return res.status(500).json({
+                success: false,
+                message: "Sub Category is not vallid"
+            }) 
+        }
+
+        return res.status(200).json({
+            success:true,
+            message:"Product fetched successfulyy",
+            subCategoryProducts
+        })
+
+    }catch(err){
+        console.log(err);
+        return res.status(500).json({
+            success: false,
+            message: "error occerd in fetching subCategories wise product"
+        })
+    }
+}
+
