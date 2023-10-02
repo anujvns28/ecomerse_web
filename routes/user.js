@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const {signup, sendOtp, chengePassword, login} = require("../controllers/auth");
+const { auth, isBayer, isSeller } = require("../middleWare/auth");
 
 
 // ********************************************************************************************************
@@ -15,6 +16,6 @@ router.post("/signup",signup)
 // routes for sendig out
 router.post("/sendOtp",sendOtp)
 //routes for updating password
-router.post("/updatePassword",chengePassword)
+router.post("/updatePassword",auth,isSeller, chengePassword)
 
 module.exports = router
