@@ -89,8 +89,9 @@ exports.deleteCategory = async(req,res) =>{
 // fetchig allCategorys
 exports.fetchAllCateories = async(req,res) =>{
     try{
-       const categoies = await cateogry.find();
+       const categoies = await cateogry.find().populate("subCategorys").exec();
        
+       console.log(categoies)
        return res.status(200).json({
         success:true,
         message:"Categories are fetched successfully",

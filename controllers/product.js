@@ -9,12 +9,12 @@ const { promises } = require("nodemailer/lib/xoauth2");
 exports.createProduct = async (req, res) => {
     try {
         //fetching data productName
-        const { productName, desc, price, subCategory, userId } = req.body;
+        const { productName, desc, price, subCategory, userId ,categoryId} = req.body;
 
         const productImages = req.files.images;
 
         //validation
-        if (!productName || !desc || !price || !subCategory || !userId) {
+        if (!productName || !desc || !price || !subCategory || !userId || !categoryId) {
             return res.status(500).json({
                 success: false,
                 message: "all filds are required"
@@ -26,6 +26,15 @@ exports.createProduct = async (req, res) => {
             return res.status(500).json({
                 success: false,
                 message: "this is not vallied Subcategory "
+            })
+        }
+
+        //check category is vallid or not
+        const categorDetail = await Cateogry.findOne({ _id: categoryId });
+        if (!categorDetail) {
+            return res.status(500).json({
+                success: false,
+                message: "this is not vallied category "
             })
         }
         //vallidation for user
@@ -57,7 +66,8 @@ exports.createProduct = async (req, res) => {
                 price: price,
                 productsImages: proImages,
                 user: userId,
-                subCategory: subCategory
+                subCategory: subCategory,
+                category:categoryId
             })
 
             // pushing productid in seller user scehma
@@ -240,7 +250,7 @@ exports.deleteProduct = async (req, res) => {
 // getting all products
 exports.getAllProduct = async(req,res) =>{
     try{
-        const allProducts = await Product.find().populate("user").exec()
+        const allProducts = await Product.find().populate("category").exec()
         console.log(allProducts)
 
         return res.status(200).json({

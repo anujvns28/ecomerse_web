@@ -6,6 +6,7 @@ exports.auth = (req,res,next) =>{
         const token = req.body.token ||
                       req.header("Authorization").replace("Bearer ", "");
 
+                      console.log(token)
         // token vallidation
         if (!token) {
             return res.status(500).json({
@@ -80,7 +81,7 @@ exports.isSeller = async (req,res,next)=>{
     //isBayer
 exports.isAdmin = async (req,res,next)=>{
     try{
-    if(req.user.accountType !== "Adimn"){
+    if(req.user.accountType !== "Admin"){
         return res.status(401).json({
             success:false,
             message:"this is protuceted routes for Admin"

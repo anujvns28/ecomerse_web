@@ -10,10 +10,18 @@ var subCategory = new mongoose.Schema({
         type:String,
         required:true,
     },
+    image:{
+        type:String,
+        required:true
+    },
     product:[{
         type:mongoose.Schema.Types.ObjectId,
         ref:"Product"
-    }]
+    }],
+    categoriId:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Cateogry"
+    }
 });
 
 //Export the model

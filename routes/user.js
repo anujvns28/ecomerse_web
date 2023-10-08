@@ -16,6 +16,6 @@ router.post("/signup",signup)
 // routes for sendig out
 router.post("/sendOtp",sendOtp)
 //routes for updating password
-router.post("/updatePassword",auth,isSeller, chengePassword)
+router.post("/updatePassword",auth, chengePassword)
 
 module.exports = router

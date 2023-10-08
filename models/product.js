@@ -17,14 +17,14 @@ const productSchema = new mongoose.Schema({
         type:String,
         required:true
     }],
-    user:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"User"
-    },
     subCategory: {
         type: mongoose.Schema.Types.ObjectId,
         ref:"SubCategory",
     },
+    category:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Cateogry"
+    }
     
 })
 

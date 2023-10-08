@@ -29,11 +29,11 @@ const router =  express.Router();
 //                                    Categories
 // ********************************************************************************************************
 //creating categores
-router.post("/createCategory",isAdmin, createCategoris);
+router.post("/createCategory",auth,isAdmin, createCategoris);
 //update categores
-router.post("/updateCategory", isAdmin,updateCategoris);
+router.post("/updateCategory",auth, isAdmin,updateCategoris);
 //delete categores
-router.post("/deleteCategories",isAdmin, deleteCategory);
+router.post("/deleteCategories",auth,isAdmin, deleteCategory);
 //fetchall categories
 router.get("/fetchallCategory", fetchAllCateories);
 
@@ -41,11 +41,11 @@ router.get("/fetchallCategory", fetchAllCateories);
 //                                    subCategories
 // ********************************************************************************************************
 //creating categores
-router.post("/createSubCategory",isAdmin, createSubCategories);
+router.post("/createSubCategory",auth,isAdmin, createSubCategories);
 //update categores
-router.post("/updateSubCategory",isAdmin, updateSubCategoris);
+router.post("/updateSubCategory",auth,isAdmin, updateSubCategoris);
 //delete categores
-router.post("/deleteSubCategories",isAdmin, deleteSubCategory);
+router.post("/deleteSubCategories",auth,isAdmin, deleteSubCategory);
 //fetchall categories
 router.post("/fetchallSubCategory",categoryWiseSubCategories);
 
@@ -54,11 +54,11 @@ router.post("/fetchallSubCategory",categoryWiseSubCategories);
 //                                    createProduct
 // ********************************************************************************************************
 //creating product
-router.post("/createProduct",isSeller, createProduct);
+router.post("/createProduct",auth,isSeller, createProduct);
 //deleating product
-router.post("/deleteProduct",isSeller, deleteProduct)
+router.post("/deleteProduct",auth,isSeller, deleteProduct)
 //updating product
-router.post("/editProduct",isSeller, editProduct)
+router.post("/editProduct",auth,isSeller, editProduct)
 //fetching allProdcuts
 router.get("/fetchAllProducts", getAllProduct)
 //fetching getUserProduct

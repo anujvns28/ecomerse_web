@@ -1,6 +1,6 @@
 const express = require("express")
 const app = express()
-
+const cors = require("cors");
 const {dbConnect} = require("./config/database");
 const userRoutes = require("./routes/user");
 const productRoutes = require("./routes/product");
@@ -12,6 +12,13 @@ const PORT = process.env.PORT || 4000
 //middle ware
 dbConnect();
 app.use(express.json());
+
+app.use(
+    cors({
+        origin:"*",
+		credentials:true,
+    },)
+);
 
 app.use(
     fileUpload({

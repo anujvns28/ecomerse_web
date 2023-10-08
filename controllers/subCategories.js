@@ -1,21 +1,25 @@
 const cateogry = require("../models/cateogry");
 const subCategory = require("../models/subCategory");
+const { uploadImageToCloudinary } = require("../utilit/imageUploader");
 
 
 exports.createSubCategories = async (req,res) => {
     try {
         //fetching data
         const { name, desc,categorId } = req.body;
+        const image = req.files.image
         //vallidatin
-        if(!name || !desc){
+        if(!name || !desc || !image || !categorId){
             return res.status(500).json({
                 success:false,
                 message:"all filds are required"
             })
         }
+         const url = await uploadImageToCloudinary(image)
+         
         // create subCategories
-        const newSubcategory = await subCategory.create({name:name,desc:desc});
-
+        const newSubcategory = await subCategory.create({name:name,desc:desc,image:url.secure_url,categoriId:categorId});
+        
         // pushing category 
         await cateogry.findByIdAndUpdate(
             {_id:categorId},
@@ -124,11 +128,12 @@ exports.categoryWiseSubCategories = async(req,res) =>{
     try{
      //fetching data
     const {categoryId} = req.body;
+    console.log(req.body,"this is reqki body")
 
     if(!categoryId){
         return res.status(500).json({
             success:false,
-            message:"all subCategory returned suceesfully"
+            message:"Subcategory required"
         })
     }
 
@@ -141,7 +146,13 @@ exports.categoryWiseSubCategories = async(req,res) =>{
         })
     }
 
-    const subCategoryes = await cateogry.findById(categoryId).populate("subCategorys").exec();
+    const subCategoryes = await cateogry.findById(categoryId).
+    populate({
+        path:"subCategorys",
+        populate:{
+            path:"product"
+        }
+    }).exec();
     console.log(subCategoryes)
 
     return res.status(200).json({
