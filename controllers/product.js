@@ -29,6 +29,8 @@ exports.createProduct = async (req, res) => {
             })
         }
 
+        console.log(subcategorDetail)
+
         //check category is vallid or not
         const categorDetail = await Cateogry.findOne({ _id: categoryId });
         if (!categorDetail) {
