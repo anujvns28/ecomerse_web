@@ -9,9 +9,10 @@ const { promises } = require("nodemailer/lib/xoauth2");
 exports.createProduct = async (req, res) => {
     try {
         //fetching data productName
-        const { productName, desc, price, subCategory, userId ,categoryId} = req.body;
+        const { productName, desc, price, subCategory, userId ,categoryId,} = req.body;
 
         const productImages = req.files.images;
+        const productMainImage = req.files.images2;
 
         //validation
         if (!productName || !desc || !price || !subCategory || !userId || !categoryId) {
@@ -49,6 +50,7 @@ exports.createProduct = async (req, res) => {
         }
 
         const uploader = async (productImg) => await uploadImageToCloudinary(productImg, process.env.FOLDER_NAME);
+        const uploader2 = await uploadImageToCloudinary(productMainImage,process.env.FOLDER_NAME)
 
         let proImages = []
         productImages.map(async (productImg) => {
@@ -69,7 +71,8 @@ exports.createProduct = async (req, res) => {
                 productsImages: proImages,
                 user: userId,
                 subCategory: subCategory,
-                category:categoryId
+                category:categoryId,
+                productMainImage:uploader2.secure_url
             })
 
             // pushing productid in seller user scehma
@@ -304,6 +307,7 @@ exports.getSubCategoryWiseProduct = async(req,res) =>{
     try{
         //fetchingdata
         const {subCategoryId}= req.body;
+        console.log(req.body,"insucbcateogry")
 
         //vallidation
         if(!subCategoryId){
