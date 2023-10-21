@@ -9,13 +9,13 @@ const { promises } = require("nodemailer/lib/xoauth2");
 exports.createProduct = async (req, res) => {
     try {
         //fetching data productName
-        const { productName, desc, price, subCategory, userId ,categoryId,} = req.body;
+        const { productName, desc, price, subCategory, userId ,categoryId,forWhom,color} = req.body;
 
         const productImages = req.files.images;
         const productMainImage = req.files.images2;
 
         //validation
-        if (!productName || !desc || !price || !subCategory || !userId || !categoryId) {
+        if (!productName || !desc || !price || !subCategory || !userId || !categoryId || !forWhom || !color) {
             return res.status(500).json({
                 success: false,
                 message: "all filds are required"
@@ -72,7 +72,9 @@ exports.createProduct = async (req, res) => {
                 user: userId,
                 subCategory: subCategory,
                 category:categoryId,
-                productMainImage:uploader2.secure_url
+                productMainImage:uploader2.secure_url,
+                forWhom:forWhom,
+                color:color
             })
 
             // pushing productid in seller user scehma

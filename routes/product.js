@@ -64,7 +64,7 @@ router.get("/fetchAllProducts", getAllProduct)
 //fetching getUserProduct
 router.get("/getuserProducts",auth, userProducts)
 //fetching getSubCategoryWiseProduct
-router.post("/getSubCategoryWiseProduct",getSubCategoryWiseProduct)
+router.post ("/getSubCategoryWiseProduct",getSubCategoryWiseProduct)
 
 
 module.exports = router

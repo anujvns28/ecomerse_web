@@ -21,6 +21,14 @@ const productSchema = new mongoose.Schema({
         type:String,
         required:true
     },
+    forWhom :{
+       type:String,
+       required:true
+    },
+    color:{
+        type:String,
+        required:true
+    },
     subCategory: {
         type: mongoose.Schema.Types.ObjectId,
         ref:"SubCategory",
