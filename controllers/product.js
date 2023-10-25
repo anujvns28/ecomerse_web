@@ -343,3 +343,38 @@ exports.getSubCategoryWiseProduct = async(req,res) =>{
     }
 }
 
+exports.getSingleProduct = async(req,res) =>{
+    try{
+        const {productId} = req.body;
+
+        if(!productId){
+            return res.status(500).json({
+                success:false,
+                message:"ProductID is required"
+            })
+        }
+
+        const productDetails = await Product.findById(productId);
+
+        if(!productDetails){
+            return res.status(500).json({
+                success:false,
+                message:"this is not vallied product"
+            }) 
+        }
+
+        return res.status(200).json({
+            success:true,
+            message:"product Detaisl fetch successfull",
+            productDetails
+        })
+
+    }catch(err){
+        console.log(err);
+        return res.status(500).json({
+            success: false,
+            message: "error occerd in fetching single product"
+        })  
+    }
+}
+

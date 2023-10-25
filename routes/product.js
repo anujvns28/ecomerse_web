@@ -19,7 +19,8 @@ const {
     editProduct, 
     getAllProduct,  
     userProducts, 
-    getSubCategoryWiseProduct
+    getSubCategoryWiseProduct,
+    getSingleProduct
 } = require("../controllers/product");
 const { isAdmin, isSeller, auth } = require("../middleWare/auth");
 
@@ -65,6 +66,7 @@ router.get("/fetchAllProducts", getAllProduct)
 router.get("/getuserProducts",auth, userProducts)
 //fetching getSubCategoryWiseProduct
 router.post ("/getSubCategoryWiseProduct",getSubCategoryWiseProduct)
-
+// fetching single product details
+router.post("/getSingleProductDetails",getSingleProduct)
 
 module.exports = router
