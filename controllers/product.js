@@ -10,10 +10,33 @@ exports.createProduct = async (req, res) => {
     try {
         //fetching data productName
         const { productName, desc, price, subCategory, userId ,categoryId,forWhom,color} = req.body;
+        let productImages = []
+        console.log(req.files,'this is form creating products')
+        
+        
+        
+        const mainImage = req.files.mainImage;
+        const image1 = req.files.img1;
+        const image2 = req.files.img2;
+        const image3 = req.files.img3;
+        const image4 = req.files.img4;
+        const image5 = req.files.img5;
 
-        const productImages = req.files.images;
-        const productMainImage = req.files.images2;
+        if(!image1 || !image2 || !image3 || !image4 || !image5){
+            return res.status(500).json({
+                success: false,
+                message: "all images are required"
+            })
+        }else{
+            productImages.push(image1)
+            productImages.push(image2)
+            productImages.push(image3)
+            productImages.push(image4)
+            productImages.push(image5)
+        }
 
+        
+       
         //validation
         if (!productName || !desc || !price || !subCategory || !userId || !categoryId || !forWhom || !color) {
             return res.status(500).json({
@@ -30,8 +53,7 @@ exports.createProduct = async (req, res) => {
             })
         }
 
-        console.log(subcategorDetail)
-
+    
         //check category is vallid or not
         const categorDetail = await Cateogry.findOne({ _id: categoryId });
         if (!categorDetail) {
@@ -50,7 +72,7 @@ exports.createProduct = async (req, res) => {
         }
 
         const uploader = async (productImg) => await uploadImageToCloudinary(productImg, process.env.FOLDER_NAME);
-        const uploader2 = await uploadImageToCloudinary(productMainImage,process.env.FOLDER_NAME)
+        const uploader2 = await uploadImageToCloudinary(mainImage,process.env.FOLDER_NAME)
 
         let proImages = []
         productImages.map(async (productImg) => {
@@ -72,7 +94,7 @@ exports.createProduct = async (req, res) => {
                 user: userId,
                 subCategory: subCategory,
                 category:categoryId,
-                productMainImage:uploader2.secure_url,
+                mainImage:uploader2.secure_url,
                 forWhom:forWhom,
                 color:color
             })

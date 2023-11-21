@@ -4,6 +4,7 @@ const Otp = require("../models/otp")
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const sendMail = require("../utilit/emalSender");
+const profile = require("../models/profile");
 
 exports.sendOtp = async (req, res) => {
     try {
@@ -73,6 +74,7 @@ exports.signup = async (req, res) => {
     try {
         console.log("sendotp me svagat hai")
         //fetching data
+        console.log(req.body,"this is form signup data")
         const { email, firstName, lastName, password, confirmPassword, otp, accountType } = req.body;
         // validation
         if (!email || !firstName || !lastName || !password || !confirmPassword || !otp || !accountType) {
@@ -106,9 +108,17 @@ exports.signup = async (req, res) => {
                 message: "otp is not matching , try agian"
             })
         }
+        console.log("rcent otp",resentOtp)
         
         //hasing password
         const hasedPassword = await bcrypt.hash(password, 10)
+
+        const additionalInfoId = await profile.create({
+            gender: null,
+            dateOfBirth: null,
+            about: null,
+            contactNumber: null,
+        })
 
         const userPayload = {
             firstName: firstName,
@@ -116,7 +126,8 @@ exports.signup = async (req, res) => {
             email: email,
             accountType: accountType,
             password: hasedPassword,
-            image: `https://api.dicebear.com/5.x/initials/svg?seed=${firstName}%20${lastName}`
+            image: `https://api.dicebear.com/5.x/initials/svg?seed=${firstName}%20${lastName}`,
+            additionalInfo : additionalInfoId
         }
 
         // creading data in deb

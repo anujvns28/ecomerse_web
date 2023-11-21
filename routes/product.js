@@ -55,7 +55,7 @@ router.post("/fetchallSubCategory",categoryWiseSubCategories);
 //                                    createProduct
 // ********************************************************************************************************
 //creating product
-router.post("/createProduct",auth,isSeller, createProduct);
+router.post("/createProduct", createProduct);
 //deleating product
 router.post("/deleteProduct",auth,isSeller, deleteProduct)
 //updating product
