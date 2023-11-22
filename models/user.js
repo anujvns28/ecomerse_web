@@ -40,6 +40,10 @@ products:[{
     type:mongoose.Schema.Types.ObjectId,
     ref:"Product"
 }],
+address:[{
+    type:mongoose.Schema.Types.ObjectId,
+    ref:"Address"
+}]
 
 })
 

@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const sendMail = require("../utilit/emalSender");
 const profile = require("../models/profile");
+const Address = require("../models/address");
 
 exports.sendOtp = async (req, res) => {
     try {
@@ -120,6 +121,19 @@ exports.signup = async (req, res) => {
             contactNumber: null,
         })
 
+        const address = await Address.create({
+            name: null,
+            phoneNumber: null,
+            pincode: null,
+            locality: null,
+            landmark:null,
+            address:null,
+            city:null,
+            state:null,
+            alternatePhoneNumber:null
+
+        })
+
         const userPayload = {
             firstName: firstName,
             lastName: lastName,
@@ -127,7 +141,8 @@ exports.signup = async (req, res) => {
             accountType: accountType,
             password: hasedPassword,
             image: `https://api.dicebear.com/5.x/initials/svg?seed=${firstName}%20${lastName}`,
-            additionalInfo : additionalInfoId
+            additionalInfo : additionalInfoId,
+            address:address
         }
 
         // creading data in deb
