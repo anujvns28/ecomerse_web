@@ -3,7 +3,7 @@ const router = express.Router();
 
 const {signup, sendOtp, chengePassword, login} = require("../controllers/auth");
 const { auth, isBayer, isSeller } = require("../middleWare/auth");
-const { getUserData, updateProfile, updateProfileImg } = require("../controllers/profile");
+const { getUserData, updateProfile, updateProfileImg, addAddress, deleteAddress } = require("../controllers/profile");
 
 
 // ********************************************************************************************************
@@ -28,5 +28,9 @@ router.post("/fetchUserData",getUserData)
 router.post("/updateProfile",updateProfile)
 // routes for updating profile img
 router.post("/updateProfileImg",updateProfileImg);
+// address adding route
+router.post("/addAddress",addAddress);
+// delte user address
+router.delete("/deleteAddres",deleteAddress)
 
 module.exports = router

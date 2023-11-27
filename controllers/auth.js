@@ -121,19 +121,6 @@ exports.signup = async (req, res) => {
             contactNumber: null,
         })
 
-        const address = await Address.create({
-            name: null,
-            phoneNumber: null,
-            pincode: null,
-            locality: null,
-            landmark:null,
-            address:null,
-            city:null,
-            state:null,
-            alternatePhoneNumber:null
-
-        })
-
         const userPayload = {
             firstName: firstName,
             lastName: lastName,
@@ -142,7 +129,6 @@ exports.signup = async (req, res) => {
             password: hasedPassword,
             image: `https://api.dicebear.com/5.x/initials/svg?seed=${firstName}%20${lastName}`,
             additionalInfo : additionalInfoId,
-            address:address
         }
 
         // creading data in deb

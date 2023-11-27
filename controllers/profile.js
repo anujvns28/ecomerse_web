@@ -140,6 +140,7 @@ exports.addAddress = async(req,res) =>{
     try{
     //fetching data
     const {userId,name,phoneNumber,pincode,city,state,locality,address,alternatePhoneNumber=null,landmark} = req.body;
+    console.log(req.body)
     //vallidation
     if(!userId ||!name || !phoneNumber || !pincode || !city || !state || !locality ||!address || !landmark ){
         return res.status(400).json({
@@ -157,9 +158,7 @@ exports.addAddress = async(req,res) =>{
         }) 
     }
 
-    const addressId = userData.address._id;
-
-    const addAddress = await Address.findByIdAndUpdate(addressId,{
+    const addAddress = await Address.create({
         name:name,
         phoneNumber:phoneNumber,
         pincode:pincode,
@@ -169,16 +168,25 @@ exports.addAddress = async(req,res) =>{
         state:state,
         landmark:landmark,
         alternatePhoneNumber:alternatePhoneNumber
-    },{new:true})
+    })
 
-    console.log(addAddress,"this is address")
+    console.log(addAddress._id,"this is address")
+
+    // pushing address id in userAddres array
+
+    await user.findByIdAndUpdate(userId,{
+        $push:{
+            address:addAddress._id
+        }
+     },{new:true})
+
+
    
    return res.status(200).json({
     success:true,
-    message:" address added suceesfully",
-    data:addAddress,
+    message:"address added suceesfully",
+    
 })
-
 
 
     }catch(err){
@@ -193,9 +201,9 @@ exports.addAddress = async(req,res) =>{
 
 exports.deleteAddress = async(req,res) =>{
     try{
-        const {userId} = req.body;
+        const {userId,addresId} = req.body;
 
-        if(!userId){
+        if(!userId || !addresId){
             return res.status(400).json({
                 success:false,
                 message:"UserId is required"
@@ -211,13 +219,11 @@ exports.deleteAddress = async(req,res) =>{
             }) 
         }
 
-        const addressId = userData.address._id;
-
-       await Address.findByIdAndDelete(addressId);
+       await Address.findByIdAndDelete(addresId);
 
        await user.findByIdAndUpdate(userId,{
         $pull:{
-            address : addressId
+            address : addresId
         }
        },{new:true})
 

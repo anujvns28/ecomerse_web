@@ -57,7 +57,7 @@ router.post("/fetchallSubCategory",categoryWiseSubCategories);
 //creating product
 router.post("/createProduct", createProduct);
 //deleating product
-router.post("/deleteProduct",auth,isSeller, deleteProduct)
+router.post("/deleteProduct", deleteProduct)
 //updating product
 router.post("/editProduct",auth,isSeller, editProduct)
 //fetching allProdcuts
@@ -68,5 +68,7 @@ router.get("/getuserProducts",auth, userProducts)
 router.post ("/getSubCategoryWiseProduct",getSubCategoryWiseProduct)
 // fetching single product details
 router.post("/getSingleProductDetails",getSingleProduct)
+// userProducts
+router.post("/getUserProduct",userProducts)
 
 module.exports = router

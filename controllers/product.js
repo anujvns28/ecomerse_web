@@ -100,6 +100,7 @@ exports.createProduct = async (req, res) => {
             })
 
             // pushing productid in seller user scehma
+            console.log("this is new produft id",newProduct._id)
             const userDetails = await User.findByIdAndUpdate(
                 userId,
                 {
@@ -217,10 +218,10 @@ exports.deleteProduct = async (req, res) => {
             })
         }
 
-        const subCategoryDetail = await Product.findOne({ _id: productId })
-        console.log(subCategoryDetail)
+        const productDetail = await Product.findOne({ _id: productId })
+        console.log(productDetail)
 
-        if (!subCategoryDetail) {
+        if (!productDetail) {
             return res.status(500).json({
                 success: false,
                 message: "This is not vallid Product"
@@ -238,7 +239,7 @@ exports.deleteProduct = async (req, res) => {
 
 
         await SubCategory.findByIdAndUpdate(
-            subCategoryDetail.subCategory._id,
+            productDetail.subCategory._id,
             {
                 $pull: {
                     product: productId
@@ -259,7 +260,7 @@ exports.deleteProduct = async (req, res) => {
 
         await Product.findByIdAndDelete(productId);
 
-        return res.status(500).json({
+        return res.status(200).json({
             success: true,
             message: "product delteed successfully"
         })
@@ -311,6 +312,13 @@ exports.userProducts = async(req,res) =>{
         }
 
         const userDetails = await User.findById(userId).populate("products").exec();
+
+        if(!userDetails){
+            return res.status(500).json({
+                success:false,
+                message:"You are not vallied user "
+            })
+        }
 
         return res.status(200).json({
             success:true,
