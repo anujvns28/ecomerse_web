@@ -4,6 +4,7 @@ const Product = require("../models/product");
 const User = require("../models/user");
 const { uploadImageToCloudinary } = require("../utilit/imageUploader");
 const { promises } = require("nodemailer/lib/xoauth2");
+const product = require("../models/product");
 
 
 exports.createProduct = async (req, res) => {
@@ -85,6 +86,8 @@ exports.createProduct = async (req, res) => {
             })
         })
 
+        console.log(proImages,"this is images ji")
+
         const createProduct = async () => {
             const newProduct = await Product.create({
                 productName: productName,
@@ -142,10 +145,42 @@ exports.createProduct = async (req, res) => {
 exports.editProduct = async (req, res) => {
     try {
         //fetching data
-        const { productName, desc, price, productId } = req.body;
-        const productImages = req.files.images;
+        const { productName, productDes, price, productId,forWhom,subCategory , color} = req.body;
+        let productImages = []
+        let thumnail = null
+
+       
+        let mainImg =  req.body.mainImage
+        mainImg === undefined ? mainImg = req.files.mainImage : req.body.mainImage
+
+        console.log(mainImg,"this is main img")
+        
+        let image1 = req.body.img1
+        image1 === undefined ? image1 = req.files.img1 : req.body.img1
+        productImages.push(image1);
+
+        let image2 = req.body.img2
+        image2 === undefined ? image2 = req.files.img2 : req.body.img2
+        productImages.push(image2);
+        
+        let image3 = req.body.img3
+        image3 === undefined ? image3 = req.files.img3 : req.body.img3
+        productImages.push(image3);
+
+        let image4 = req.body.img4
+        image4 === undefined ? image4 = req.files.img4 : req.body.img4
+        productImages.push(image4);
+
+        let image5 = req.body.img5
+        image5 === undefined ? image5 = req.files.img5 : req.body.img5
+        productImages.push(image5);
+
+       console.log(req.body,"this is array ji")
+
+     
+
         //validation
-        if (!productName || !desc || !price || !productId) {
+        if (!productName || !productDes || !price || !productId || !productDes || !forWhom || !subCategory) {
             return res.status(500).json({
                 success: false,
                 message: "all filds are required"
@@ -160,29 +195,34 @@ exports.editProduct = async (req, res) => {
                 message: "this is not vallid product"
             })
         }
+        console.log(typeof(mainImg))
+        if(typeof(mainImg) != 'string'){
+            console.log("calling main img function")
+           let img = await uploadImageToCloudinary(mainImg);
+            console.log(img.secure_url,"this is urlllll")
+            thumnail = img.secure_url
+           }
+        
 
         const uploader = async (productImg) => await uploadImageToCloudinary(productImg, process.env.FOLDER_NAME);
 
-        let proImages = []
-        productImages.map(async (productImg) => {
-            const img = uploader(productImg)
-            img.then(async function (result) {
-                proImages.push(result.secure_url)
-                if (productImages.length === proImages.length) {
-                    updateProduct()
-                }
-            })
-        })
+        
 
+      
 
-        const updateProduct = async () => {
-            const updatedProduct = await Product.findByIdAndUpdate(
+    
+           const updateProduct = async () =>{
+            console.log("calling updat function")
+            const product = await Product.findByIdAndUpdate(
                 productId,
                 {
                     productName: productName,
-                    productDes: desc,
+                    productDes:productDes,
                     price: price,
-                    productsImages: proImages,
+                    forWhom : forWhom,
+                    color : color,
+                    productsImages : proImages,
+                    mainImage : thumnail === null ? mainImg : thumnail 
                 },
                 {new:true}
             )
@@ -190,9 +230,31 @@ exports.editProduct = async (req, res) => {
             return res.status(200).json({
                 success: true,
                 message: "product updated successfully",
-                data : updatedProduct
+                data : product
             })
-        }
+
+           }
+
+           let proImages = []
+           productImages.map(async(productImg) => {
+               if(typeof(productImg) != "string"){
+                   const img = uploader(productImg)
+                   img.then(async function (result) {
+                   proImages.push(result.secure_url)
+                   if (productImages.length === proImages.length) {
+                       updateProduct()
+                   }
+               })
+              
+               }else{
+                   proImages.push(productImg)
+                   if (productImages.length === proImages.length) {
+                       updateProduct()
+                   }
+               }
+           })
+            
+        
 
 
 
@@ -408,3 +470,44 @@ exports.getSingleProduct = async(req,res) =>{
     }
 }
 
+// product searching api
+
+exports.searchProduct = async(req,res) =>{
+    try{
+        console.log(req.body)
+    const {proName} = req.body;
+
+    if(!proName){
+        return res.status(200).json({
+            success:true,
+            data:[]
+        })
+    }
+    console.log(proName,"this is pro name")
+
+    
+        const products = await Product.find(
+            {
+                "$or" : [
+                    {"productName" : {$regex:proName,$options: 'i' } },
+                    {"productDes" : {$regex:proName,$options: 'i' } },   
+                ]
+            }
+        )
+    
+        
+    
+        return res.status(200).json({
+            success:true,
+            data:products
+        })
+    
+
+    }catch(err){
+        console.log(err);
+        return res.status(500).json({
+            success: false,
+            message: "error occerd in Searching  product Api"
+        })   
+    }
+}

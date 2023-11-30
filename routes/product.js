@@ -20,7 +20,8 @@ const {
     getAllProduct,  
     userProducts, 
     getSubCategoryWiseProduct,
-    getSingleProduct
+    getSingleProduct,
+    searchProduct
 } = require("../controllers/product");
 const { isAdmin, isSeller, auth } = require("../middleWare/auth");
 
@@ -59,7 +60,7 @@ router.post("/createProduct", createProduct);
 //deleating product
 router.post("/deleteProduct", deleteProduct)
 //updating product
-router.post("/editProduct",auth,isSeller, editProduct)
+router.post("/editProduct", editProduct)
 //fetching allProdcuts
 router.get("/fetchAllProducts", getAllProduct)
 //fetching getUserProduct
@@ -70,5 +71,7 @@ router.post ("/getSubCategoryWiseProduct",getSubCategoryWiseProduct)
 router.post("/getSingleProductDetails",getSingleProduct)
 // userProducts
 router.post("/getUserProduct",userProducts)
+// search Product
+router.post("/searchProducts",searchProduct)
 
 module.exports = router
