@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const {signup, sendOtp, chengePassword, login} = require("../controllers/auth");
+const {signup, sendOtp, chengePassword, login, forgotPasswordToken, forgotPassword} = require("../controllers/auth");
 const { auth, isBayer, isSeller } = require("../middleWare/auth");
 const { getUserData, updateProfile, updateProfileImg, addAddress, deleteAddress } = require("../controllers/profile");
 
@@ -32,5 +32,9 @@ router.post("/updateProfileImg",updateProfileImg);
 router.post("/addAddress",addAddress);
 // delte user address
 router.delete("/deleteAddres",deleteAddress)
+//forgot Password token
+router.post("/forgotPasswordToken",forgotPasswordToken)
+// forgot password
+router.post("/forgotPassword",forgotPassword)
 
 module.exports = router

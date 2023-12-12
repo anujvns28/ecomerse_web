@@ -23,6 +23,7 @@ password:{
 },
 token:{
    type:String,
+   expires:5*60
 },
 additionalInfo:{
     type:mongoose.Schema.Types.ObjectId,
@@ -43,7 +44,7 @@ products:[{
 address:[{
     type:mongoose.Schema.Types.ObjectId,
     ref:"Address"
-}]
+}],
 
 })
 

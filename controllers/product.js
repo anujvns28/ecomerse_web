@@ -474,7 +474,7 @@ exports.getSingleProduct = async(req,res) =>{
 
 exports.searchProduct = async(req,res) =>{
     try{
-        console.log(req.body)
+    console.log(req.body)
     const {proName} = req.body;
 
     if(!proName){
@@ -495,7 +495,7 @@ exports.searchProduct = async(req,res) =>{
             }
         )
     
-        
+        console.log(products)
     
         return res.status(200).json({
             success:true,

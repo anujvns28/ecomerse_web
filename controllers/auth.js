@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const sendMail = require("../utilit/emalSender");
 const profile = require("../models/profile");
 const Address = require("../models/address");
+const crypto = require("crypto");
 
 exports.sendOtp = async (req, res) => {
     try {
@@ -255,3 +256,97 @@ exports.chengePassword = async (req, res) => {
         })
     }
 }
+
+
+exports.forgotPasswordToken  = async(req,res) => {
+try{
+    //fatching data
+    const {email} = req.body;
+    console.log(req.body)
+    // valladating
+    if( !email){
+        return res.status(400).json({
+            success:false,
+            message:"all fild are required"
+        })
+    }
+
+    const userData = await User.findOne({email:email});
+    console.log(userData,"this is userdata hai")
+    if(!userData){
+        return res.status(400).json({
+            success:false,
+            message:"You are not vallied user"
+        })
+    }
+
+    const uuid = crypto.randomUUID();
+    const forgotPasswordLink = `http://localhost:3000/forgot-password/${uuid}`
+    console.log(forgotPasswordLink,"this si crypto ji")
+
+    await sendMail(email,"Change Password",forgotPasswordLink);
+
+    await User.findOneAndUpdate({email:email},{
+        token:uuid
+    },{new:true})
+
+    return res.status(200).json({
+        success: true,
+        messege: "Change password link sent successfully"
+    })
+
+}catch(err){
+    console.log(err)
+    return res.status(500).json({
+        success: false,
+        message: "error occuring for got password token",
+    }) 
+}
+}
+
+exports.forgotPassword = async(req,res) =>{
+    try{
+    const {userId,password,conPassword} = req.body;
+    console.log(req.body)
+    if(!userId || !password || !conPassword){
+        return res.status(400).json({
+            success:false,
+            message:"all fild are required"
+        })
+    }
+    if(password !== conPassword){
+        return res.status(400).json({
+            success:false,
+            message:"password not matched"
+        }) 
+    }
+
+    const userData = await User.findOne({token:userId});
+    if(!userData){
+        return res.status(400).json({
+            success:false,
+            message:"You are not vallied user"
+        })
+    }
+   
+    const hasedPassword = await bcrypt.hash(password,10);
+
+    await User.findOneAndUpdate({token:userId},{
+        password : hasedPassword
+    },{new:true})
+
+    return res.status(200).json({
+        success: true,
+        messege: "Change password successfully"
+    })
+
+    }catch(err){
+        console.log(err)
+        return res.status(500).json({
+            success: false,
+            message: "error occuring for got password ",
+        }) 
+    }
+}
+
+
