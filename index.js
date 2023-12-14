@@ -4,6 +4,7 @@ const cors = require("cors");
 const {dbConnect} = require("./config/database");
 const userRoutes = require("./routes/user");
 const productRoutes = require("./routes/product");
+const paymentRouts = require("./routes/payment")
 const { cloudinaryConnect } = require("./config/cloudnery");
 const fileUpload = require("express-fileupload");
 require("dotenv").config();
@@ -33,6 +34,7 @@ cloudinaryConnect();
 //mounging
 app.use("/api/v1/user",userRoutes);
 app.use("/api/v1/product",productRoutes);
+app.use("/api/v1/payment",paymentRouts);
 app.listen(PORT , () =>{
     console.log("server started successfully")
 })

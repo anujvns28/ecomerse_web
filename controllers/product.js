@@ -438,6 +438,7 @@ exports.getSubCategoryWiseProduct = async(req,res) =>{
 exports.getSingleProduct = async(req,res) =>{
     try{
         const {productId} = req.body;
+        console.log(req.body)
 
         if(!productId){
             return res.status(500).json({
