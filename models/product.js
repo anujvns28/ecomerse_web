@@ -36,7 +36,11 @@ const productSchema = new mongoose.Schema({
     category:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"Cateogry"
-    }
+    },
+    customor:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"User"
+    }]
     
 })
 

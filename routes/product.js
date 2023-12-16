@@ -21,7 +21,9 @@ const {
     userProducts, 
     getSubCategoryWiseProduct,
     getSingleProduct,
-    searchProduct
+    searchProduct,
+    getOrders,
+    
 } = require("../controllers/product");
 const { isAdmin, isSeller, auth } = require("../middleWare/auth");
 
@@ -73,5 +75,9 @@ router.post("/getSingleProductDetails",getSingleProduct)
 router.post("/getUserProduct",userProducts)
 // search Product
 router.post("/searchProducts",searchProduct)
+// get orders
+router.post("/order",getOrders)
+// seeler data
+
 
 module.exports = router

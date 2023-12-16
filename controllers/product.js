@@ -10,12 +10,12 @@ const product = require("../models/product");
 exports.createProduct = async (req, res) => {
     try {
         //fetching data productName
-        const { productName, desc, price, subCategory, userId ,categoryId,forWhom,color} = req.body;
+        const { productName, desc, price, subCategory, userId, categoryId, forWhom, color } = req.body;
         let productImages = []
-        console.log(req.files,'this is form creating products')
-        
-        
-        
+        console.log(req.files, 'this is form creating products')
+
+
+
         const mainImage = req.files.mainImage;
         const image1 = req.files.img1;
         const image2 = req.files.img2;
@@ -23,12 +23,12 @@ exports.createProduct = async (req, res) => {
         const image4 = req.files.img4;
         const image5 = req.files.img5;
 
-        if(!image1 || !image2 || !image3 || !image4 || !image5){
+        if (!image1 || !image2 || !image3 || !image4 || !image5) {
             return res.status(500).json({
                 success: false,
                 message: "all images are required"
             })
-        }else{
+        } else {
             productImages.push(image1)
             productImages.push(image2)
             productImages.push(image3)
@@ -36,8 +36,8 @@ exports.createProduct = async (req, res) => {
             productImages.push(image5)
         }
 
-        
-       
+
+
         //validation
         if (!productName || !desc || !price || !subCategory || !userId || !categoryId || !forWhom || !color) {
             return res.status(500).json({
@@ -54,7 +54,7 @@ exports.createProduct = async (req, res) => {
             })
         }
 
-    
+
         //check category is vallid or not
         const categorDetail = await Cateogry.findOne({ _id: categoryId });
         if (!categorDetail) {
@@ -73,7 +73,7 @@ exports.createProduct = async (req, res) => {
         }
 
         const uploader = async (productImg) => await uploadImageToCloudinary(productImg, process.env.FOLDER_NAME);
-        const uploader2 = await uploadImageToCloudinary(mainImage,process.env.FOLDER_NAME)
+        const uploader2 = await uploadImageToCloudinary(mainImage, process.env.FOLDER_NAME)
 
         let proImages = []
         productImages.map(async (productImg) => {
@@ -86,7 +86,7 @@ exports.createProduct = async (req, res) => {
             })
         })
 
-        console.log(proImages,"this is images ji")
+        console.log(proImages, "this is images ji")
 
         const createProduct = async () => {
             const newProduct = await Product.create({
@@ -96,14 +96,14 @@ exports.createProduct = async (req, res) => {
                 productsImages: proImages,
                 user: userId,
                 subCategory: subCategory,
-                category:categoryId,
-                mainImage:uploader2.secure_url,
-                forWhom:forWhom,
-                color:color
+                category: categoryId,
+                mainImage: uploader2.secure_url,
+                forWhom: forWhom,
+                color: color
             })
 
             // pushing productid in seller user scehma
-            console.log("this is new produft id",newProduct._id)
+            console.log("this is new produft id", newProduct._id)
             const userDetails = await User.findByIdAndUpdate(
                 userId,
                 {
@@ -145,16 +145,16 @@ exports.createProduct = async (req, res) => {
 exports.editProduct = async (req, res) => {
     try {
         //fetching data
-        const { productName, productDes, price, productId,forWhom,subCategory , color} = req.body;
+        const { productName, productDes, price, productId, forWhom, subCategory, color } = req.body;
         let productImages = []
         let thumnail = null
 
-       
-        let mainImg =  req.body.mainImage
+
+        let mainImg = req.body.mainImage
         mainImg === undefined ? mainImg = req.files.mainImage : req.body.mainImage
 
-        console.log(mainImg,"this is main img")
-        
+        console.log(mainImg, "this is main img")
+
         let image1 = req.body.img1
         image1 === undefined ? image1 = req.files.img1 : req.body.img1
         productImages.push(image1);
@@ -162,7 +162,7 @@ exports.editProduct = async (req, res) => {
         let image2 = req.body.img2
         image2 === undefined ? image2 = req.files.img2 : req.body.img2
         productImages.push(image2);
-        
+
         let image3 = req.body.img3
         image3 === undefined ? image3 = req.files.img3 : req.body.img3
         productImages.push(image3);
@@ -175,9 +175,9 @@ exports.editProduct = async (req, res) => {
         image5 === undefined ? image5 = req.files.img5 : req.body.img5
         productImages.push(image5);
 
-       console.log(req.body,"this is array ji")
+        console.log(req.body, "this is array ji")
 
-     
+
 
         //validation
         if (!productName || !productDes || !price || !productId || !productDes || !forWhom || !subCategory) {
@@ -195,66 +195,66 @@ exports.editProduct = async (req, res) => {
                 message: "this is not vallid product"
             })
         }
-        console.log(typeof(mainImg))
-        if(typeof(mainImg) != 'string'){
+        console.log(typeof (mainImg))
+        if (typeof (mainImg) != 'string') {
             console.log("calling main img function")
-           let img = await uploadImageToCloudinary(mainImg);
-            console.log(img.secure_url,"this is urlllll")
+            let img = await uploadImageToCloudinary(mainImg);
+            console.log(img.secure_url, "this is urlllll")
             thumnail = img.secure_url
-           }
-        
+        }
+
 
         const uploader = async (productImg) => await uploadImageToCloudinary(productImg, process.env.FOLDER_NAME);
 
-        
 
-      
 
-    
-           const updateProduct = async () =>{
+
+
+
+        const updateProduct = async () => {
             console.log("calling updat function")
             const product = await Product.findByIdAndUpdate(
                 productId,
                 {
                     productName: productName,
-                    productDes:productDes,
+                    productDes: productDes,
                     price: price,
-                    forWhom : forWhom,
-                    color : color,
-                    productsImages : proImages,
-                    mainImage : thumnail === null ? mainImg : thumnail 
+                    forWhom: forWhom,
+                    color: color,
+                    productsImages: proImages,
+                    mainImage: thumnail === null ? mainImg : thumnail
                 },
-                {new:true}
+                { new: true }
             )
 
             return res.status(200).json({
                 success: true,
                 message: "product updated successfully",
-                data : product
+                data: product
             })
 
-           }
+        }
 
-           let proImages = []
-           productImages.map(async(productImg) => {
-               if(typeof(productImg) != "string"){
-                   const img = uploader(productImg)
-                   img.then(async function (result) {
-                   proImages.push(result.secure_url)
-                   if (productImages.length === proImages.length) {
-                       updateProduct()
-                   }
-               })
-              
-               }else{
-                   proImages.push(productImg)
-                   if (productImages.length === proImages.length) {
-                       updateProduct()
-                   }
-               }
-           })
-            
-        
+        let proImages = []
+        productImages.map(async (productImg) => {
+            if (typeof (productImg) != "string") {
+                const img = uploader(productImg)
+                img.then(async function (result) {
+                    proImages.push(result.secure_url)
+                    if (productImages.length === proImages.length) {
+                        updateProduct()
+                    }
+                })
+
+            } else {
+                proImages.push(productImg)
+                if (productImages.length === proImages.length) {
+                    updateProduct()
+                }
+            }
+        })
+
+
 
 
 
@@ -340,17 +340,17 @@ exports.deleteProduct = async (req, res) => {
 
 
 // getting all products
-exports.getAllProduct = async(req,res) =>{
-    try{
+exports.getAllProduct = async (req, res) => {
+    try {
         const allProducts = await Product.find().populate("category").exec()
         console.log(allProducts)
 
         return res.status(200).json({
-            success:true,
-            message:"all product fetched successfully",
+            success: true,
+            message: "all product fetched successfully",
             allProducts
         })
-    }catch(err){
+    } catch (err) {
         console.log(err);
         return res.status(500).json({
             success: false,
@@ -360,34 +360,34 @@ exports.getAllProduct = async(req,res) =>{
 }
 
 // get user product
-exports.userProducts = async(req,res) =>{
-    try{
-       //fetching data
-        const {userId} = req.body;
-        
+exports.userProducts = async (req, res) => {
+    try {
+        //fetching data
+        const { userId } = req.body;
+
         //vallidation
-        if(!userId){
+        if (!userId) {
             return res.status(500).json({
-                success:false,
-                message:"all fild are required"
+                success: false,
+                message: "all fild are required"
             })
         }
 
         const userDetails = await User.findById(userId).populate("products").exec();
 
-        if(!userDetails){
+        if (!userDetails) {
             return res.status(500).json({
-                success:false,
-                message:"You are not vallied user "
+                success: false,
+                message: "You are not vallied user "
             })
         }
 
         return res.status(200).json({
-            success:true,
-            message:"products fetched successfully",
-            products:userDetails
+            success: true,
+            message: "products fetched successfully",
+            products: userDetails
         })
-    }catch(err){
+    } catch (err) {
         console.log(err);
         return res.status(500).json({
             success: false,
@@ -397,36 +397,36 @@ exports.userProducts = async(req,res) =>{
 }
 
 // get SubCategorwiseproduct
-exports.getSubCategoryWiseProduct = async(req,res) =>{
-    try{
+exports.getSubCategoryWiseProduct = async (req, res) => {
+    try {
         //fetchingdata
-        const {subCategoryId}= req.body;
-        console.log(req.body,"insucbcateogry")
+        const { subCategoryId } = req.body;
+        console.log(req.body, "insucbcateogry")
 
         //vallidation
-        if(!subCategoryId){
+        if (!subCategoryId) {
             return res.status(500).json({
                 success: false,
                 message: "Sub Category is required"
-            }) 
+            })
         }
-        
+
         const subCategoryProducts = await SubCategory.findById(subCategoryId).populate("product").exec();
 
-        if(!subCategoryProducts){
+        if (!subCategoryProducts) {
             return res.status(500).json({
                 success: false,
                 message: "Sub Category is not vallid"
-            }) 
+            })
         }
 
         return res.status(200).json({
-            success:true,
-            message:"Product fetched successfulyy",
+            success: true,
+            message: "Product fetched successfulyy",
             subCategoryProducts
         })
 
-    }catch(err){
+    } catch (err) {
         console.log(err);
         return res.status(500).json({
             success: false,
@@ -435,80 +435,116 @@ exports.getSubCategoryWiseProduct = async(req,res) =>{
     }
 }
 
-exports.getSingleProduct = async(req,res) =>{
-    try{
-        const {productId} = req.body;
+exports.getSingleProduct = async (req, res) => {
+    try {
+        const { productId } = req.body;
         console.log(req.body)
 
-        if(!productId){
+        if (!productId) {
             return res.status(500).json({
-                success:false,
-                message:"ProductID is required"
+                success: false,
+                message: "ProductID is required"
             })
         }
 
         const productDetails = await Product.findById(productId);
 
-        if(!productDetails){
+        if (!productDetails) {
             return res.status(500).json({
-                success:false,
-                message:"this is not vallied product"
-            }) 
+                success: false,
+                message: "this is not vallied product"
+            })
         }
 
         return res.status(200).json({
-            success:true,
-            message:"product Detaisl fetch successfull",
+            success: true,
+            message: "product Detaisl fetch successfull",
             productDetails
         })
 
-    }catch(err){
+    } catch (err) {
         console.log(err);
         return res.status(500).json({
             success: false,
             message: "error occerd in fetching single product"
-        })  
+        })
     }
 }
 
 // product searching api
 
-exports.searchProduct = async(req,res) =>{
-    try{
-    console.log(req.body)
-    const {proName} = req.body;
+exports.searchProduct = async (req, res) => {
+    try {
+        console.log(req.body)
+        const { proName } = req.body;
 
-    if(!proName){
-        return res.status(200).json({
-            success:true,
-            data:[]
-        })
-    }
-    console.log(proName,"this is pro name")
+        if (!proName) {
+            return res.status(200).json({
+                success: true,
+                data: []
+            })
+        }
+        console.log(proName, "this is pro name")
 
-    
+
         const products = await Product.find(
             {
-                "$or" : [
-                    {"productName" : {$regex:proName,$options: 'i' } },
-                    {"productDes" : {$regex:proName,$options: 'i' } },   
+                "$or": [
+                    { "productName": { $regex: proName, $options: 'i' } },
+                    { "productDes": { $regex: proName, $options: 'i' } },
                 ]
             }
         )
-    
-        console.log(products)
-    
-        return res.status(200).json({
-            success:true,
-            data:products
-        })
-    
 
-    }catch(err){
+        console.log(products)
+
+        return res.status(200).json({
+            success: true,
+            data: products
+        })
+
+
+    } catch (err) {
         console.log(err);
         return res.status(500).json({
             success: false,
             message: "error occerd in Searching  product Api"
-        })   
+        })
     }
 }
+
+exports.getOrders = async (req, res) => {
+    try {
+        const userId = req.body.userId;
+
+        if (!userId) {
+            return res.status(400).json({
+                success: false,
+                message: "user id is required"
+            })
+        }
+
+        const userData = await User.findById(userId).populate("products").exec();
+        if (!userData) {
+            return res.status(400).json({
+                success: false,
+                message: "You are not vallid user"
+            })
+        }
+
+        return res.status(200).json({
+            success: true,
+            data: userData.products
+        })
+
+
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({
+            success: false,
+            message: "error occerd in fetching order Api"
+        })
+    }
+}
+
+
