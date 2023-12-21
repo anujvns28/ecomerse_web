@@ -76,7 +76,7 @@ exports.productBuyEmail = (name,address,link) => {
                 <a class="cta" href= ${link}>View Shouse</a>
             </div>
             <div class="support">If you have any questions or need assistance, please feel free to reach out to us at <a
-                    href="mailto:anujvns28@gmail.com">info@studynotion.com</a>. We are here to help!</div>
+                    href="mailto:anujvns28@gmail.com">info@www.shouseDekho.com</a>. We are here to help!</div>
         </div>
     </body>
     </html>`;

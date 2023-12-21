@@ -411,7 +411,9 @@ exports.getSubCategoryWiseProduct = async (req, res) => {
             })
         }
 
-        const subCategoryProducts = await SubCategory.findById(subCategoryId).populate("product").exec();
+        const subCategoryProducts = await SubCategory.findById(subCategoryId).populate("product")
+        .populate("categoriId")
+        .exec();
 
         if (!subCategoryProducts) {
             return res.status(500).json({
