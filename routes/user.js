@@ -11,7 +11,7 @@ const { getUserData, updateProfile, updateProfileImg, addAddress, deleteAddress 
 // ********************************************************************************************************
 
 // routes for using loging
-router.post("/login",login)
+router.post("/login",login);
 // routes for signup
 router.post("/signup",signup)
 // routes for sendig out

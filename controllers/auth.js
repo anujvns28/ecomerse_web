@@ -4,7 +4,7 @@ const Otp = require("../models/otp")
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const sendMail = require("../utilit/emalSender");
-const profile = require("../models/profile");
+const Profile = require("../models/profile");
 const Address = require("../models/address");
 const crypto = require("crypto");
 
@@ -115,12 +115,15 @@ exports.signup = async (req, res) => {
         //hasing password
         const hasedPassword = await bcrypt.hash(password, 10)
 
-        const additionalInfoId = await profile.create({
-            gender: null,
-            dateOfBirth: null,
-            about: null,
-            contactNumber: null,
-        })
+         // additional info
+       const profilePayload = {
+        gender:null,
+        contactNumber:null,
+        dateOfBirth:null,
+        about:null
+      }
+
+     const profile = await Profile.create(profilePayload);
 
         const userPayload = {
             firstName: firstName,
@@ -129,7 +132,7 @@ exports.signup = async (req, res) => {
             accountType: accountType,
             password: hasedPassword,
             image: `https://api.dicebear.com/5.x/initials/svg?seed=${firstName}%20${lastName}`,
-            additionalInfo : additionalInfoId,
+            additionalInfo : profile._id
         }
 
         // creading data in deb
@@ -142,6 +145,7 @@ exports.signup = async (req, res) => {
             data: user,
 
         })
+        
     } catch (err) {
         console.log(err)
         return res.status(500).json({
