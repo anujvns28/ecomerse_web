@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 exports.auth = (req,res,next) =>{
     try{
         //fetch token
-        const token = req.body.c ||
+        const token = req.body.token ||
                       req.header("Authorization").replace("Bearer ", "");
 
                       console.log(token)
