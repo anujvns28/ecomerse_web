@@ -3,7 +3,6 @@ require("dotenv").config();
 
 const sendMail = async (email, title, body) => {
     try {
-        console.log("calling sedmail")
         const transpoter = nodemailer.createTransport({
             host: process.env.MAIL_HOST,
             auth: {

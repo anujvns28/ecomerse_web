@@ -17,21 +17,21 @@ router.post("/signup",signup)
 // routes for sendig out
 router.post("/sendOtp",sendOtp)
 //routes for updating password
-router.post("/updatePassword",auth, chengePassword)
+router.post("/updatePassword", chengePassword)
 
 // ********************************************************************************************************
 //                                     User routes
 // ********************************************************************************************************
 // routes for user
-router.post("/fetchUserData",getUserData)
+router.post("/fetchUserData",auth,getUserData)
 // routes for updating profile
-router.post("/updateProfile",updateProfile)
+router.post("/updateProfile",auth,updateProfile)
 // routes for updating profile img
-router.post("/updateProfileImg",updateProfileImg);
+router.post("/updateProfileImg",auth,updateProfileImg);
 // address adding route
-router.post("/addAddress",addAddress);
+router.post("/addAddress",auth,addAddress);
 // delte user address
-router.delete("/deleteAddres",deleteAddress)
+router.delete("/deleteAddres",auth,deleteAddress)
 //forgot Password token
 router.post("/forgotPasswordToken",forgotPasswordToken)
 // forgot password

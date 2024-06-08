@@ -82,7 +82,7 @@ exports.signup = async (req, res) => {
         if (!email || !firstName || !lastName || !password || !confirmPassword || !otp || !accountType) {
             return res.status(500).json({
                 success: false,
-                message: 'all fileds required'
+                message: 'all fileds required hai ji'
             })
         }
         //match passwords 
@@ -285,7 +285,7 @@ try{
     }
 
     const uuid = crypto.randomUUID();
-    const forgotPasswordLink = `http://localhost:3000/forgot-password/${uuid}`
+    const forgotPasswordLink = `https://shouse-dekho.vercel.app/forgot-password/${uuid}`
     console.log(forgotPasswordLink,"this si crypto ji")
 
     await sendMail(email,"Change Password",forgotPasswordLink);
