@@ -6,7 +6,7 @@ exports.auth = (req,res,next) =>{
         const token = req.body.token ||
                       req.header("Authorization").replace("Bearer ", "");
 
-                      console.log(token)
+                      console.log(token,"token")
         // token vallidation
         if (!token) {
             return res.status(500).json({

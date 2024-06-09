@@ -27,7 +27,7 @@ router.post("/fetchUserData",auth,getUserData)
 // routes for updating profile
 router.post("/updateProfile",auth,updateProfile)
 // routes for updating profile img
-router.post("/updateProfileImg",auth,updateProfileImg);
+router.post("/updateProfileImg",updateProfileImg);
 // address adding route
 router.post("/addAddress",auth,addAddress);
 // delte user address
